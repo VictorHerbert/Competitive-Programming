@@ -24,13 +24,13 @@ unsigned long long MOD = 1e9 + 7;
 #define pb push_back
 #define sz size
 
-int main()
-{
-
+int main(){    
     ios_base::sync_with_stdio(false), cin.tie(0);
     cout << fixed << setprecision(2);
+    
 
     return 0;
 }
 
 //g++ -std=c++11 s.cpp -o s.exe & s.exe < in.txt > out.txt
+//python s.py < in.txt > out.txt
