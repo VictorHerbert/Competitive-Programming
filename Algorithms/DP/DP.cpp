@@ -1,3 +1,16 @@
+int lis(vi& v){
+    vi seq = {v[0]};
+    for(int i = 1; i < v.size(); i++){
+        auto it = lower_bound(seq.begin(),seq.end(),v[i]);
+        if(it == seq.end())
+            seq.pb(v[i]);
+        else
+            *it = v[i];
+
+    }
+    return seq.size();
+}
+
 vector<bool> subsetSum(vector<int> &v){
     int acum = 0;
     for (auto i : v)

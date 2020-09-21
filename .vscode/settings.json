@@ -3,7 +3,13 @@
         "vector": "cpp",
         "ostream": "cpp",
         "iosfwd": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "*.tcc": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp"
     },
     "python.formatting.provider": "black"
 }

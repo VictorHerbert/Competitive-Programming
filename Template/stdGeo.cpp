@@ -25,7 +25,6 @@ unsigned long long MOD = 1e9 + 7;
 
 #define all(x) x.begin(), x.end()
 
-#define hypot(x,y) sqrt(x*x+y*y)
 //----------------- Constants & Macros ------------------------------
 
 const double PI = atan(1.0)*4;
@@ -34,6 +33,7 @@ const double DEG_to_RAD_CONST = PI/180;
 const double RAD_TO_DEG_CONST = 180/PI;
 #define DEG_TO_RAD(x) x * DEG_to_RAD_CONST
 #define RAD_TO_DEG(x) x * RAD_TO_DEG_CONST
+#define hypot(x, y) sqrt(x *x + y * y)
 
 //----------------- Point ------------------------------
 
@@ -52,6 +52,14 @@ struct Point{
     Point operator*(double k) const{
         return Point(x * k, y * k);
     }
+
+    double norm(){
+        return hypot(x, y);
+    }
+
+    Point normalized(){
+        return *this * (1 / norm());
+    }
 };
 
 struct PointPolar{
@@ -61,6 +69,7 @@ struct PointPolar{
     PointPolar(double _r, double _a) : r(_r), a(_a) {}
 };
 
+#define Vec Point
 //----------------- Conversions ------------------------------
 
 PointPolar Polar(Point p){
@@ -73,13 +82,13 @@ Point toRect(PointPolar p){
 
 //----------------- Vector ------------------------------
 
-double inner(Point p1, Point p2){
+double inner(Vec p1, Vec p2){
     return p1.x*p2.x + p1.y*p2.y;
 }
-double cross(Point p1, Point p2){
+double cross(Vec p1, Vec p2){
     return p1.x*p2.y + p2.x*p1.x;
 }
-Point proj(Point u, Point v){
+Point proj(Vec u, Vec v){
     return v * (inner(u, v) / inner(v, v));
 }
 
@@ -131,11 +140,13 @@ bool polarComp(Point a, Point b){
 // ax+by+c=0
 struct Line{
     double a, b, c;
+    Point p1,p2;
+    Vec v;
 
     Line() {}
     Line(double _a, double _b, double _c) : a(_a), b(_b), c(_c) {}
-    Line(Point &p1, Point &p2)
-    {                                    // If b == 0 is vertical, b == 1 otherwise
+    Line(Point _p1, Point _p2){ 
+        p1 = _p1, p2 = _p2;              // If b == 0 is vertical, b == 1 otherwise
         if (abs(p1.x - p2.x) < EPS)      // Vertical
             a = 1.0, b = 0.0, c = -p1.x; // default values
         else
@@ -144,6 +155,7 @@ struct Line{
             b = 1.0;
             c = -(a * p1.x) - p1.y;
         }
+        v = p1-p2;
     }
 
     double angCoef(){
@@ -157,9 +169,15 @@ struct Line{
     }
 };
 
+
+double angle(Line l1, Line l2){
+    return acos(inner(l1.v, l2.v) / (l1.v.norm()*l2.v.norm()));
+}
+
 bool areParallel(Line l1, Line l2){
     return (abs(l1.a - l2.a) < EPS) && (abs(l1.b - l2.b) < EPS);
 }
+
 bool areSame(Line l1, Line l2){
     return areParallel(l1, l2) && (abs(l1.c - l2.c) < EPS);
 }
@@ -178,42 +196,53 @@ Point intersectPoint(Line &l1, Line &l2){
     return p;
 }
 
-double angleBetween(Line& l1, Line& l2){
-    return l1.ang()-l2.ang();
-}
-
 Point projPointToLine(Point u, Line l){
     Point a, b;
-    if (abs(l.b - 1.0) < EPS)
-    {
-        a = point(-l.c / l.a, 0.0);
-        b = point(-l.c / l.a, 1.0);
+    if (abs(l.b - 1.0) < EPS){
+        a = Point(-l.c / l.a, 0.0);
+        b = Point(-l.c / l.a, 1.0);
     }
-    else
-    {
-        a = point(0, -l.c / l.b);
-        b = point(1, -(l.c + 1.0) / l.b);
+    else{
+        a = Point(0, -l.c / l.b);
+        b = Point(1, -(l.c + 1.0) / l.b);
     }
     return a + proj(u - a, b - a);
 }
-//----------------- Distances ------------------------------
 
+//----------------- Segment ------------------------------
+
+#define Segment Line
+
+Point closestToSegment(Segment s, Point p, ){
+    double u = inner(p - s.p1, s.p2 - s.p1) / inner(s.p2 - s.p1, s.p2 - s.p1);
+
+    if (u < 0.0)
+        return s.p1;
+    if (u > 1.0)
+        return s.p2;
+    return s.p1 + ((s.p2 - s.p1) * u);
+}
 
 /*
+bool inside(Segment s, Point p){
+    return abs(inner(s.p1-p,s.p2-p) - 1) < EPS;
+}*/
 
-bool inside(Circle &c, Point &p){
-    return dist(c.center, p) < c.r;
+bool insideSeg(Segment s, point r){
+    return collinear(s.p1, s.p2, r) && inner(s.p1 - s.p2, r - s.p2) <= 0;
 }
 
-//----------------- Intersections ------------------------------
-
-bool intersec(Circle &c1, Circle &c2){
-    return (dist(c1.center, c2.center) <= (c1.r + c2.r));
+bool intersectsSegLine(Segment s, Line l){
+    return insideSeg(s, intersec(s, l));
 }
+bool intersectsSegSeg(Segment s, Segment l){
+    Point p = intersec(s, l);
+    return insideSeg(s, p) & intersec(l, p);
+}
+//----------------- Circles ------------------------------
 
-
-
-struct Circle{
+struct Circle
+{
     Point center;
     double r;
 
@@ -221,6 +250,15 @@ struct Circle{
     Circle(Point _center, double _r) : center(_center), r(_r) {}
 };
 
+bool inside(Circle &c, Point &p){
+    return dist(c.center, p) < c.r;
+}
+
+bool intersec(Circle &c1, Circle &c2){
+    return (dist(c1.center, c2.center) <= (c1.r + c2.r));
+}
+
+//----------------- Triangles ------------------------------
 
 struct Triangle
 {
@@ -244,6 +282,13 @@ double perimeter(Triangle& t){
     return t.ab+t.ac+t.bc;
 }
 
+//Cossine law c^2 = a^2 + b^2 - 2ab cos C
+Triangle byAngle(double a, double b, double C){
+    return Triangle(
+        a,b,
+        sqrt(a*a+b*b-2*a*b*cos(C))
+    );
+}
 
 //Heron's
 double area(Triangle t){
@@ -290,7 +335,7 @@ double area(Polygon &p){
     }
 
     return abs(area / 2.0);
-}*/
+}
 
 ostream &operator<<(ostream &os, const Point &p)
 {
