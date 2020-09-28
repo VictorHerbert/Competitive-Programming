@@ -28,17 +28,23 @@ def invind(f,x):
     return 1j*x/(2*pi*f)
 
 A = np.array([
-    [1-1j,5j],
-    [5j,-5j+4]
+    [-10+1/(5j)+1/(30+5j),0],
+    [1,-1]
+
 ])
 
 B = np.array([
-    [10],
-    [0]
+    [(10j)/(30+5j)],
+    [10j]
 ])
 
-#v = np.linalg.solve(A,B)
+v = np.linalg.solve(A,B)
 
-v = invind(60,5)
 
+print(deg(v[1][0]/(100j)))
+
+z = parallel(5j,30+5j)
+
+v = z/(1-10*z)
 print(v)
+

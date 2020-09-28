@@ -58,15 +58,14 @@ std::ostream &operator<<(
 void print(){
     cout << endl;
 }
+
 template <typename T>
-void print(T t)
-{
+void print(T t){
     cout << t << endl;
 }
 
 template <typename T, typename... Args>
-void print(T t, Args... args)
-{
+void print(T t, Args... args){
     cout << t << " ";
     print(args...);
 }

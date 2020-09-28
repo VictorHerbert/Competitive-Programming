@@ -43,6 +43,7 @@ void initUF(int n)
     ranks = vi(n + 1, 1);
 }
 
+
 int findSet(int i)
 {
     return (p[i] == -1) ? i : (p[i] = findSet(p[i]));
@@ -86,57 +87,26 @@ ll kruskal()
         }
     }
     n++;
-
     return acum;
 }
 
-vvi adjs;
-vector<bool> marc;
-int acum;
-
-void dfs(int vertex){
-    //debug(vertex);
-    marc[vertex] = true;
-    acum++;
-
-    for (int i = 0; i < adjs[vertex].size(); i++)
-        if (!marc[adjs[vertex][i]])
-            dfs(adjs[vertex][i]);
-}
-
-int main(){
+int main()
+{
     //ios_base::sync_with_stdio(false), cin.tie(0);
 
     int m, k, a, b, c;
+    ll acum = 0, g_acum = 0;
     string s;
 
+    cin >> n >> m;
 
-    while(cin >> n >> m){
-        if(n == 0 & m == 0)
-            break;
+    initUF(n);
 
-        initUF(n);
-        acum = 0;
-        marc = vector<bool>(n+1,false);
-        edges = vector<Edge>(m);
-        adjs  = vvi(n+1,vi());
+    edges = vector<Edge>(m);
+    for (auto &edge : edges)
+        cin >> edge.ori >> edge.dst >> edge.w;
 
-        for (Edge &edge : edges){
-            cin >> edge.ori >> edge.dst >> edge.w;
-
-            adjs[edge.ori].pb(edge.dst);
-            adjs[edge.dst].pb(edge.ori);
-        }
-        
-        dfs(1);
-
-        /*if(acum != n)
-            cout << "impossivel\n";
-        else
-            cout << kruskal() << "\n";*/
-        cout << "1\n";
-            
-    }
+    cout << kruskal() << "\n";
 
     return 0;
 }

@@ -213,6 +213,7 @@ Point projPointToLine(Point u, Line l){
 
 #define Segment Line
 
+/*
 Point closestToSegment(Segment s, Point p, ){
     double u = inner(p - s.p1, s.p2 - s.p1) / inner(s.p2 - s.p1, s.p2 - s.p1);
 
@@ -223,10 +224,10 @@ Point closestToSegment(Segment s, Point p, ){
     return s.p1 + ((s.p2 - s.p1) * u);
 }
 
-/*
+
 bool inside(Segment s, Point p){
     return abs(inner(s.p1-p,s.p2-p) - 1) < EPS;
-}*/
+}
 
 bool insideSeg(Segment s, point r){
     return collinear(s.p1, s.p2, r) && inner(s.p1 - s.p2, r - s.p2) <= 0;
@@ -335,7 +336,7 @@ double area(Polygon &p){
     }
 
     return abs(area / 2.0);
-}
+}*/
 
 ostream &operator<<(ostream &os, const Point &p)
 {
@@ -346,8 +347,8 @@ ostream &operator<<(ostream &os, const PointPolar &p)
 {
     os << "(r: " << p.r << ", a: " << p.a << ")";
     return os;
-}/*
-ostream &operator<<(ostream &os, const Circle &c)
+}
+/*ostream &operator<<(ostream &os, const Circle &c)
 {
     os << "(center: " << c.center << ", r: " << c.r << ")";
     return os;
@@ -359,12 +360,71 @@ ostream &operator<<(ostream &os, const Line &l)
     return os;
 }*/
 
-int main()
-{
 
+int main(){
     ios_base::sync_with_stdio(false), cin.tie(0);
     cout << fixed << setprecision(2);
-    
+
+    int t,p,acum,gc;
+    cin >> t;
+
+    while(t--){
+        Point e;
+        cin >> e.x >> e.y
+            >> p;
+
+        vector<pair<int, int>> walls(p);
+
+        for(auto& wall : walls)
+            cin >> wall.first >> wall.second;
+
+
+        sort(all(walls));
+
+        acum = 0;
+        cin >> gc;
+        while(gc--){
+            Point g;
+            cin >> g.x >> g.y;
+
+            Line eg(e,g);
+            double o = eg.offset();
+            pair<int,int> pp = mp((int) floor(o),0);
+            
+            int start = max(
+                0,
+                (lower_bound(walls.begin(),walls.end(), pp)-walls.begin() - 1)
+            );
+
+            for(int i = start; i < walls.size(); i++){
+                auto wall = walls[i];
+                if (wall.first < o){
+                    if (o < wall.second){
+                        acum++;
+                        break;
+                    }
+                }
+                else
+                    break;
+            }
+                
+        }
+
+        cout << acum << "\n";
+                
+
+    }
+
+
+
+    return 0;
+}
+
+//g++ -std=c++11 ../Template/stdGeo.cpp -o s.exe & s.exe < in.txt > out.txt
+
+
+
+
     /*double ang;
     cin >> ang;
     debug(DEG_TO_RAD(ang));
@@ -393,9 +453,3 @@ int main()
 
     debug(RAD_TO_DEG(angleBetween(l2,l1)));*/
 
-
-
-    return 0;
-}
-
-//g++ -std=c++11 ../Template/stdGeo.cpp -o s.exe & s.exe < in.txt > out.txt
