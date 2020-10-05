@@ -375,82 +375,7 @@ ostream &operator<<(ostream &os, const Line &l)
     return os;
 }*/
 
-struct Circle
-{
-    Point c;
-    double r;
 
-    Circle(const Point &_c, double _r) : c(_c), r(_r){};
-    Circle(const Point &a, const Point &b)
-    {
-
-        c = {(a.x + b.x) / 2.0, (a.y + b.y) / 2.0};
-        r = Point::dist(a, b) / 2.0;
-    };
-
-    Circle(const Point &_a, const Point &_b, const Point &_c)
-    {
-        Line r1 = Line::med(_a, _b);
-        Line r2 = Line::med(_a, _c);
-
-        c = intersec(r1, r2);
-        r = Point::dist(c, _a);
-    };
-
-    bool isInside(const Point &p)
-    {
-        return Point::dist(c, p) <= r;
-    }
-};
-
-bool isValid(Circle &c, vector<Point> pts)
-{
-    for (Point p : pts)
-        if (!c.isInside(p))
-            return false;
-
-    return true;
-}
-
-Circle welzl(vector<Point> &p, int n, vector<Point> r)
-{
-    if ((n == 0) || (r.size() == 3))
-    {
-        assert(r.size() <= 3);
-        switch (r.size())
-        {
-        case 0:
-            return {{0, 0}, 0};
-        case 1:
-            return Circle(r[0], 0);
-        case 2:
-            return Circle(r[0], r[1]);
-        case 3:
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = i + 1; j < 3; j++)
-                {
-                    Circle c(r[i], r[j]);
-                    if (isValid(c, p))
-                        return c;
-                }
-            }
-            return Circle(r[0], r[1], r[2]);
-        }
-    }
-
-    int idx = rand() % n;
-    Point pt = p[idx];
-    swap(p[idx], p[n - 1]);
-
-    Circle c = welzl(p, n - 1, r);
-
-    if (c.isInside(pt))
-        return c;
-
-    r.pb(pt);
-    return welzl(p, n - 1, r);
-}
 
 int main(){
     //ios_base::sync_with_stdio(false), cin.tie(0);
@@ -461,9 +386,13 @@ int main(){
     cin >> n >> xa >> xb;
 
     vector<Point> pts(n);
+    vector<Point> apts(n);
+    vector<Point> vpts(n);
 
-    for(auto& pt : pts)
-        cin >> pt.x >> pt.y;
+    for(int i = 0; i < n; i++){
+        cin >> pts[i].x >> pts[i].y;
+        apts[i] 
+    }
 
     sort(all(pts), polarComp);
 
