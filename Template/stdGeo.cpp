@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 
-#if __has_include("../Util/print.h")
-#include "../Util/print.h"
+#if __has_include("../Util/debug.h")
+#include "../Util/debug.h"
 #endif
 
 #if __has_include("../Util/geo_debug.h")
@@ -375,6 +375,34 @@ ostream &operator<<(ostream &os, const Line &l)
     return os;
 }*/
 
+struct Circle
+{
+    Point c;
+    double r;
+
+    Circle(const Point &_c, double _r) : c(_c), r(_r){};
+    Circle(const Point &a, const Point &b)
+    {
+
+        c = {(a.x + b.x) / 2.0, (a.y + b.y) / 2.0};
+        r = Point::dist(a, b) / 2.0;
+    };
+
+    Circle(const Point &_a, const Point &_b, const Point &_c)
+    {
+        Line r1 = Line::med(_a, _b);
+        Line r2 = Line::med(_a, _c);
+
+        c = intersec(r1, r2);
+        r = Point::dist(c, _a);
+    };
+
+    bool isInside(const Point &p)
+    {
+        return Point::dist(c, p) <= r;
+    }
+};
+
 bool isValid(Circle &c, vector<Point> pts)
 {
     for (Point p : pts)
@@ -411,7 +439,9 @@ Circle welzl(vector<Point> &p, int n, vector<Point> r)
         }
     }
 
-    Point pt = p[n - 1];
+    int idx = rand() % n;
+    Point pt = p[idx];
+    swap(p[idx], p[n - 1]);
 
     Circle c = welzl(p, n - 1, r);
 
@@ -422,15 +452,22 @@ Circle welzl(vector<Point> &p, int n, vector<Point> r)
     return welzl(p, n - 1, r);
 }
 
-
 int main(){
     //ios_base::sync_with_stdio(false), cin.tie(0);
     //cout << fixed << setprecision(2);
-
     int n;
+    double xa, xb;
 
-    cin >> n;
+    cin >> n >> xa >> xb;
 
+    vector<Point> pts(n);
+
+    for(auto& pt : pts)
+        cin >> pt.x >> pt.y;
+
+    sort(all(pts), polarComp);
+
+    debug(pts);
 
     return 0;
 }
