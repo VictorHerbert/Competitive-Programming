@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+//----- General -------
+
 template <template <class, class> class Container, class T, class Alloc = std::allocator<T>>
 std::ostream &operator<<(
     std::ostream &os,
@@ -17,10 +19,13 @@ std::ostream &operator<<(
     return os << " ]";
 }
 
+//----- Map -------
+
 template <typename T1, typename T2>
-std::ostream &operator<<(std::ostream &os,
-                         const std::map<T1, T2> &m)
-{
+std::ostream &operator<<(
+    std::ostream &os,
+    const std::map<T1, T2> &m
+){
     const char *sep[] = {"", ", "};
     int si = 0;
     os << "{ ";
@@ -32,14 +37,17 @@ std::ostream &operator<<(std::ostream &os,
     return os << " }";
 }
 
+//----- Set -------
+
 template <typename T1>
-std::ostream &operator<<(std::ostream &os,
-                         const std::set<T1> &m)
-{
+std::ostream &operator<<(
+    std::ostream &os,
+    const std::set<T1> &s
+){
     const char *sep[] = {"", ", "};
     int si = 0;
     os << "{ ";
-    for (const auto &elt : m)
+    for (const auto &elt : s)
     {
         os << sep[si] << elt;
         si = 1;
@@ -47,11 +55,13 @@ std::ostream &operator<<(std::ostream &os,
     return os << " }";
 }
 
+//----- Pair -------
+
 template <typename T1, typename T2>
-std::ostream &operator<<(
+std::ostream &operator << (
     std::ostream &os,
-    const pair<T1, T2> p)
-{
+    const pair<T1, T2> p
+){
     cout << '<' << p.first << "," << p.second << ">";
 }
 
@@ -73,3 +83,4 @@ void print(T t, Args... args){
 #define debug(x) print(#x, ":", x)
 #define debug2(x1,x2) print(#x1, ":", x1, '|', #x2, ":", x2)
 #define debug3(x1, x2, x3) print(#x1, ":", x1, '|', #x2, ":", x2, '|', #x3, ":", x3)
+#define debug4(x1, x2, x3, x4) print(#x1, ":", x1, '|', #x2, ":", x2, '|', #x3, ":", x3, #x4, ":", x4)

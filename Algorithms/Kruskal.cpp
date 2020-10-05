@@ -37,25 +37,21 @@ vi p, ranks;
 vector<Edge> edges;
 int n;
 
-void initUF(int n)
-{
+void initUF(int n){
     p = vi(n + 1, -1);
     ranks = vi(n + 1, 1);
 }
 
 
-int findSet(int i)
-{
+int findSet(int i){
     return (p[i] == -1) ? i : (p[i] = findSet(p[i]));
 }
 
-bool isSame(int a, int b)
-{
+bool isSame(int a, int b){
     return findSet(a) == findSet(b);
 }
 
-void merge(int a, int b)
-{
+void merge(int a, int b){
     a = findSet(a), b = findSet(b);
 
     if (ranks[a] > ranks[b])
@@ -69,8 +65,7 @@ void merge(int a, int b)
     }
 }
 
-ll kruskal()
-{
+ll kruskal(){
     ll acum = 0, count = 0;
     n--;
 
@@ -90,8 +85,7 @@ ll kruskal()
     return acum;
 }
 
-int main()
-{
+int main(){
     //ios_base::sync_with_stdio(false), cin.tie(0);
 
     int m, k, a, b, c;

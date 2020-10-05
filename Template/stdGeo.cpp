@@ -4,6 +4,10 @@
 #include "../Util/print.h"
 #endif
 
+#if __has_include("../Util/geo_debug.h")
+#include "../Util/geo_debug.h"
+#endif
+
 using namespace std;
 
 double EPS = 1e-9;
@@ -348,6 +352,17 @@ ostream &operator<<(ostream &os, const PointPolar &p)
     os << "(r: " << p.r << ", a: " << p.a << ")";
     return os;
 }
+
+/*bool intersects(float cx, float cy, float radius, float left, float top, float right, float bottom)
+{
+    float closestX = (cx < left ? left : (cx > right ? right : cx));
+    float closestY = (cy < bottom ? bottom : (cy > top ? top : cy));
+    float dx = closestX - cx;
+    float dy = closestY - cy;
+    //debug2(closestX, closestY);
+
+    return (dx * dx + dy * dy) <= radius * radius;
+}*/
 /*ostream &operator<<(ostream &os, const Circle &c)
 {
     os << "(center: " << c.center << ", r: " << c.r << ")";
@@ -360,96 +375,64 @@ ostream &operator<<(ostream &os, const Line &l)
     return os;
 }*/
 
+bool isValid(Circle &c, vector<Point> pts)
+{
+    for (Point p : pts)
+        if (!c.isInside(p))
+            return false;
 
-int main(){
-    ios_base::sync_with_stdio(false), cin.tie(0);
-    cout << fixed << setprecision(2);
+    return true;
+}
 
-    int t,p,acum,gc;
-    cin >> t;
-
-    while(t--){
-        Point e;
-        cin >> e.x >> e.y
-            >> p;
-
-        vector<pair<int, int>> walls(p);
-
-        for(auto& wall : walls)
-            cin >> wall.first >> wall.second;
-
-
-        sort(all(walls));
-
-        acum = 0;
-        cin >> gc;
-        while(gc--){
-            Point g;
-            cin >> g.x >> g.y;
-
-            Line eg(e,g);
-            double o = eg.offset();
-            pair<int,int> pp = mp((int) floor(o),0);
-            
-            int start = max(
-                0,
-                (lower_bound(walls.begin(),walls.end(), pp)-walls.begin() - 1)
-            );
-
-            for(int i = start; i < walls.size(); i++){
-                auto wall = walls[i];
-                if (wall.first < o){
-                    if (o < wall.second){
-                        acum++;
-                        break;
-                    }
+Circle welzl(vector<Point> &p, int n, vector<Point> r)
+{
+    if ((n == 0) || (r.size() == 3))
+    {
+        assert(r.size() <= 3);
+        switch (r.size())
+        {
+        case 0:
+            return {{0, 0}, 0};
+        case 1:
+            return Circle(r[0], 0);
+        case 2:
+            return Circle(r[0], r[1]);
+        case 3:
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = i + 1; j < 3; j++)
+                {
+                    Circle c(r[i], r[j]);
+                    if (isValid(c, p))
+                        return c;
                 }
-                else
-                    break;
             }
-                
+            return Circle(r[0], r[1], r[2]);
         }
-
-        cout << acum << "\n";
-                
-
     }
 
+    Point pt = p[n - 1];
+
+    Circle c = welzl(p, n - 1, r);
+
+    if (c.isInside(pt))
+        return c;
+
+    r.pb(pt);
+    return welzl(p, n - 1, r);
+}
+
+
+int main(){
+    //ios_base::sync_with_stdio(false), cin.tie(0);
+    //cout << fixed << setprecision(2);
+
+    int n;
+
+    cin >> n;
 
 
     return 0;
 }
 
 //g++ -std=c++11 ../Template/stdGeo.cpp -o s.exe & s.exe < in.txt > out.txt
-
-
-
-
-    /*double ang;
-    cin >> ang;
-    debug(DEG_TO_RAD(ang));
-    cout << endl;
-
-    Point p;
-    cin >> p.x >> p.y;
-    debug(p);
-    debug(toPolar(p));
-    cout << endl;
-
-    Circle c;
-    cin >> c.center.x >> c.center.y >> c.r;
-    debug(c);
-    cout << endl;
-
-    Point p1,p2;
-    cin >> p1.x >> p1.y >> p2.x >> p2.y;
-    Line l1(p1,p2);
-    debug(l1);
-    debug(RAD_TO_DEG(l1.ang()));
-
-    cin >> p1.x >> p1.y >> p2.x >> p2.y;
-    Line l2(p1, p2);
-    debug(RAD_TO_DEG(l2.ang()));
-
-    debug(RAD_TO_DEG(angleBetween(l2,l1)));*/
-

@@ -19,11 +19,12 @@ const unsigned long long MOD = 1e9 + 7;
 #define vs vector<string>
 
 #define mp make_pair
-
 #define pb push_back
 #define sz size
-
 #define all(x) x.begin(), x.end()
+
+//WARNING
+#define FOR(i, n) for (int i = 0; i < n; i++)
 
 #define Edge pair<int, pair<int, bool>>
 #define make_edge(a, w, d) mp(a, mp(w, d))
@@ -33,10 +34,10 @@ const unsigned long long MOD = 1e9 + 7;
 
 vector<vector<Edge>> adjs;
 vector<bool> marc;
-ll acum = 0;
 
 int bfs(int vertex)
 {
+    ll acum = 0;
     queue<int> q;
     q.push(vertex);
     marc[vertex] = true;
@@ -62,6 +63,20 @@ int bfs(int vertex)
     }
 
     return acum;
+}
+
+vi child_count;
+
+int dfs(int vertex)
+{
+    child_count[vertex] = 0;
+
+    for (Edge edge : adjs[vertex])
+        if (child_count[edge.dst] == -1)
+            child_count[vertex] += dfs(edge.dst);
+    child_count[vertex] += (child_count[vertex] == 0);
+    debug3(vertex, child_count[vertex], adjs[vertex].size());
+    return child_count[vertex];
 }
 
 int main()
@@ -137,13 +152,12 @@ int main()
     debug(table);
     debug(sdirs);
     debug(adjs);
-    acum = 0;
     marc = vector<bool>(table.size(), false);
-    //bfs(0);
-    print(acum);
+    child_count = vi(table.size(), -1);
+
+    dfs(0);
+    debug(child_count);
 
     return 0;
 }
-
 //g++ -std=c++11 s.cpp -o s.exe & s.exe < in.txt > out.txt
-//python s.py < in.txt > out.txt
