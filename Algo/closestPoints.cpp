@@ -1,33 +1,48 @@
 #include <bits/stdc++.h>
+#define DEBUG false
 
-#if __has_include("../Util/debug.h")
-#include "../Util/debug.h"
-#endif
+#if DEBUG == true
+    #if __has_include("../Util/debug.h")
+    #include "../Util/debug.h"
+    #endif
 
-#if __has_include("../Util/geo_debug.h")
-#include "../Util/geo_debug.h"
+    #if __has_include("../Util/geo_debug.h")
+    #include "../Util/geo_debug.h"
+    #endif
 #endif
 
 using namespace std;
 
-double EPS = 1e-9;
-int INF = INT_MAX / 4;
-unsigned long long MOD = 1e9 + 7;
-#define TAM 1e6
+const double EPS = 1e-9;
+const int INF = INT_MAX / 4;
+const unsigned long long MOD = 1e9 + 7;
+inline bool D_EQ(double a, double b) { return abs(a - b) < EPS; }
 
+#define ld double
 #define ll long long
 #define vi vector<int>
 #define vvi vector<vector<int>>
 #define ull unsigned long long
 #define vll vector<ll>
 #define vvll vector<vector<ll>>
+#define vs vector<string>
+#define vb vector<bool>
 
 #define mp make_pair
-
 #define pb push_back
 #define sz size
-
 #define all(x) x.begin(), x.end()
+#define rall(x) x.rbegin(), x.rend()
+#define FIND(v, c) find(v.begin(), v.end(), c) != v.end()
+#define FOR(i, a, b) for (int i = a; i < b; i++)
+#define REP(n) FOR(_, 0, n)
+inline int inRange(int i, int a, int b){return a <= i && i < b;}
+inline int inRange2D(int i, int j, int a, int b) { return inRange(i, 0, a) && inRange(j, 0, b); }
+inline int toidx(int i, int j, int n) { return i * n + j; }
+inline ld clamp(ld v, ld a, ld b) { return max(a, min(v, b)); }
+const vvi orto = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+const vvi diag = {{1, 1}, {0, -1}, {1, 0}, {-1, 0}};
+const vvi dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
 //----------------- Constants & Macros ------------------------------
 
@@ -65,6 +80,8 @@ struct Point{
         return *this * (1 / norm());
     }
 };
+
+typedef vector<Point> Points;
 
 struct PointPolar{
     double r, a;
@@ -126,17 +143,6 @@ double angle(Point a, Point o, Point b){
     return acos(inner(a - o, b - o) / (dist(o, a) * dist(o, b)));
 }
 
-//works for int coordinates
-bool polarComp(Point a, Point b){
-    if (b.y * a.y > 0)
-        return cross(a, b) > 0;
-    else if (b.y == 0 && b.x > 0)
-        return false;
-    else if (a.y == 0 && a.x > 0)
-        return true;
-    else
-        return b.y < a.y;
-}
 
 //----------------- Lines ------------------------------
 
@@ -215,7 +221,9 @@ Point projPointToLine(Point u, Line l){
 
 //----------------- Segment ------------------------------
 
-#define Segment Line
+struct Segment : Line{
+    Segment(Point a, Point b)  : Line(a,b){}
+};
 
 /*
 Point closestToSegment(Segment s, Point p, ){
@@ -261,7 +269,7 @@ bool inside(Circle &c, Point &p){
 
 bool intersec(Circle &c1, Circle &c2){
     return (dist(c1.center, c2.center) <= (c1.r + c2.r));
-}
+}*/
 
 //----------------- Triangles ------------------------------
 
@@ -309,15 +317,16 @@ double rCircumCircle(Triangle &t){
     return t.ab * t.bc * t.ac / (4.0 * area(t));
 }
 
-bool inside(Triangle& t, Point& p){
-    return (
-        area(t) == 
+bool inside(Triangle t, Point p){
+    return 
+        D_EQ( area(t),
             area(Triangle(t.a, t.b, p))+
             area(Triangle(t.a, p, t.c))+
             area(Triangle(p, t.b, t.c))
-    );
+        );
 }
 
+/*
 //----------------- Polygon ------------------------------
 
 typedef vector<Point> Polygon;
@@ -375,30 +384,134 @@ ostream &operator<<(ostream &os, const Line &l)
     return os;
 }*/
 
+//works for int coordinates
+bool polarComp(Point a, Point b)
+{
+    if (b.y * a.y > 0)
+        return cross(a, b) > 0;
+    else if (b.y == 0 && b.x > 0)
+        return false;
+    else if (a.y == 0 && a.x > 0)
+        return true;
+    else
+        return b.y < a.y;
+}
 
+inline bool polComp(Point a, Point b)
+{
+    return a.y * b.x >= b.y * a.x;
+}
+
+#if DEBUG == true
+    #if __has_include("../Util/geo_debug.h")
+
+inline void plot(Point p){
+    GD_POINT(p.x, p.y);
+}
+inline void plot(Line l){
+    GD_LINE(
+        l.p1.x, l.p1.y,
+        l.p2.x, l.p2.y);
+}
+inline void plot(Segment l){
+    GD_SEGMENT(
+        l.p1.x, l.p1.y,
+        l.p2.x, l.p2.y);
+}
+
+    #endif
+#endif
+
+Points pts;
+
+ld rec(int a, int b){
+    if(b-a <= 3){
+        ld m = INF;
+        for (int i = a; i < b; ++i){
+            for (int j = i + 1; j < b; ++j){
+                m = min(m,dist(pts[a],pts[b]));
+            }
+        }
+        return m;
+    }
+    else{
+        int mid = (a + b) /2;
+        ld d = min(rec(a, mid), rec(mid + 1, b));
+
+        Points strip;
+
+        for(auto& p : pts)
+            if(abs(p.x-pts[mid].x) < d)
+                strip.pb(p);
+
+        sort(all(pts), [](const Point &p1, const Point &p2) -> bool { return p1.y > p2.y; });
+
+        ld acum = INF;
+        FOR(i, 0, strip.size())
+            FOR(j, i+1, min((int) strip.size(),i+7))
+                acum = min(acum,dist(pts[i],pts[j]));
+        
+        return min(acum,d);
+    }
+}
 
 int main(){
-    //ios_base::sync_with_stdio(false), cin.tie(0);
-    //cout << fixed << setprecision(2);
+    cout << fixed << setprecision(4);
     int n;
-    double xa, xb;
 
-    cin >> n >> xa >> xb;
+    while(cin >> n){
+        if(n == 0)
+            break;
+        pts = Points(n);
 
-    vector<Point> pts(n);
-    vector<Point> apts(n);
-    vector<Point> vpts(n);
+        for(auto& p : pts)
+            cin >> p.x >> p.y;
 
-    for(int i = 0; i < n; i++){
-        cin >> pts[i].x >> pts[i].y;
-        apts[i] 
+        sort(all(pts), [](const Point &p1, const Point &p2) -> bool {return p1.x > p2.x;});
+
+        //debug(pts);
+        ld d = rec(0,pts.size());
+        if (d < 10000)
+            cout << d << "\n";
+        else
+            cout << "INFINITY\n";
     }
-
-    sort(all(pts), polarComp);
-
-    debug(pts);
 
     return 0;
 }
 
 //g++ -std=c++11 ../Template/stdGeo.cpp -o s.exe & s.exe < in.txt > out.txt
+
+struct comp
+{
+    bool operator()(Point p1, Point p2) { return p1.y <= p2.y; }
+};
+
+Points pts;
+
+ld closestPoints()
+{
+    int n = pts.size();
+    sort(all(pts), [](const Point &p1, const Point &p2) -> bool { return p1.x > p2.x; });
+
+    set<Point, comp> strip;
+
+    ld d = dist(pts[0], pts[1]);
+    strip.insert(pts[0]);
+    int idx = 0;
+    ld ad = d;
+
+    FOR(i, 1, n)
+    {
+        while ((pts[i].x - pts[idx].x) > d)
+            strip.erase(pts[idx++]);
+
+        for (auto it = strip.lower_bound(pts[i] - Point(0, d));
+             it->y < pts[i].y + d && it != strip.end(); it++)
+            d = min(d, dist(*it, pts[i]));
+
+        strip.insert(pts[i]);
+    }
+
+    return d;
+}

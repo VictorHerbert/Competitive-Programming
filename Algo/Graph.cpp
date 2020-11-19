@@ -1,7 +1,7 @@
-//#include <bits/stdc++.h>
+#include <bits/stdc++.h>
 
-#if __has_include("../Util/print.h")
-#include "../Util/print.h"
+#if __has_include("../../Util/debug.h")
+#include "../../Util/debug.h"
 #endif
 
 using namespace std;
