@@ -1,3 +1,5 @@
+#ifndef DEBUG_PRINT_H
+#define DEBUG_PRINT_H
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -89,6 +91,17 @@ void print(){
     cout << endl;
 }
 
+
+void print_seg(vector<long long> t, int lvl = INT_MAX) {
+    for(int i = 0; i < t.size()-1; i++) {
+        cout << t[i+1] << " ";
+        if(__builtin_popcount(i + 2) == 1){
+            cout << endl;
+            if(lvl-- == 0) break;
+        }
+    }
+    cout << endl;
+}
 template <typename T>
 void print(T t){
     cout << t << endl;
@@ -104,3 +117,6 @@ void print(T t, Args... args){
 #define debug2(x1,x2) print(#x1, ":", x1, "\t|", #x2, ":", x2)
 #define debug3(x1, x2, x3) print(#x1, ":", x1, "\t|", #x2, ":", x2, "\t|", #x3, ":", x3)
 #define debug4(x1, x2, x3, x4) print(#x1, ":", x1, '|', #x2, ":", x2, '|', #x3, ":", x3, #x4, ":", x4)
+
+
+#endif

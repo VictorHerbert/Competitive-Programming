@@ -44,10 +44,22 @@ const vvi orto = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 const vvi diag = {{1, 1}, {0, -1}, {1, 0}, {-1, 0}};
 const vvi dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
+int main(){
+    ll t,n,a,b;
+    cin >> t;
+    REP(t){
+        cin >> n >> a >> b;
+        ll acum = n-1;
 
-int main(){    
-    
+        ll prize = a*n - acum*b
+
+        cout << n << " " << a << " " << b << " ";
+        if(prize > a)
+            cout << prize << "\n";
+        else
+            cout << "FURADA\n";
+    }   
+
     return 0;
 }
-
-//g++ -std=c++11 s.cpp -o ./io/s.exe & io\s.exe < ./io/in.txt > ./io/out.txt
+//g++ -std=c++11 H.cpp -o s.exe & s.exe < ./io/in.txt > ./io/out.txt

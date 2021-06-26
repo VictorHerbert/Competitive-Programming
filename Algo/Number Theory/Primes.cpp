@@ -21,11 +21,10 @@ int INF = 1000000005;
 //Complexity O(sqrt(n))
 bool isPrime(long long n){
     long long upLimit = ceil(sqrt(n));
-    for(long long i = 2; i < upLimit; i++){
+    for(long long i = 2; i < upLimit; i++)
         if(n%i == 0)
             return false;
-    }
-
+    
     return true;
 }
 
@@ -35,12 +34,11 @@ vector<ll>& sieve(ll n){
     primes.pb(2);
     for(ll i = 3; i < n; i++){
         bool isPrime = true;
-        for (int p : primes){
+        for (int p : primes)
             if (i % p == 0){
                 isPrime = false;
                 break;
             }
-        }
         if(isPrime)
             primes.pb(i);
     }

@@ -45,9 +45,37 @@ const vvi diag = {{1, 1}, {0, -1}, {1, 0}, {-1, 0}};
 const vvi dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
 
-int main(){    
+ 
+
+int main(){
+    int n,a,b;
+    cin >> n;
+    vi v(n);
+    for(int& i : v)
+        cin >> i;
     
+
+    while(v.size() > 1){
+        int a = v[0], b = v[1];
+        
+        if(a+b == 0){
+            cout << "0\n";
+            return 0;
+        }
+        else if(a+b > 0){
+            v.erase(v.begin());
+            v[0] = a-b;
+        }
+        else if(a+b < 0){
+            v.erase(v.begin()+1);
+        }
+    }
+
+    cout << v[0] << "\n";
+
+
+   
+
     return 0;
 }
-
-//g++ -std=c++11 s.cpp -o ./io/s.exe & io\s.exe < ./io/in.txt > ./io/out.txt
+//g++ -std=c++11 K.cpp -o s.exe & s.exe < ./io/in.txt > ./io/out.txt

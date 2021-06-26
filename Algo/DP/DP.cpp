@@ -29,7 +29,7 @@ vector<bool> subsetSum(vector<int> &v){
     return e;
 }
 
-ll largetSubarray(vi &v){
+ll largestSubarray(vi &v){
     ll g_acum = 0, acum = 0;
 
     for (int i : v)

@@ -1,12 +1,8 @@
-
-
 int lcs(int a, int b){
-    if (dp[a][b] == -1)
-    {
+    if (dp[a][b] == -1){
         if ((a && b) == 0)
             dp[a][b] = 0;
-        else
-        {
+        else{
             int acum = 0, lim = min(a, b) + 1;
             while (s1[a - acum] == s2[b - acum] && lim--)
                 acum++;
@@ -19,7 +15,7 @@ int lcs(int a, int b){
     return dp[a][b];
 }
 
-int largestPal(int l, int r){
+int largestPalindrome(int l, int r){
     if (dp[l][r] != -1)
         return dp[l][r];
 
@@ -29,7 +25,7 @@ int largestPal(int l, int r){
         return dp[l][r] = 1 + (s[l] == s[r]);
 
     if (s[l] == s[r])
-        return dp[l][r] = 2 + largestPal(l + 1, r - 1);
+        return dp[l][r] = 2 + largestPalindrome(l + 1, r - 1);
     else
-        return dp[l][r] = max(largestPal(l, r - 1), largestPal(l + 1, r));
+        return dp[l][r] = max(largestPalindrome(l, r - 1), largestPalindrome(l + 1, r));
 }

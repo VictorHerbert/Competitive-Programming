@@ -44,10 +44,26 @@ const vvi orto = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 const vvi diag = {{1, 1}, {0, -1}, {1, 0}, {-1, 0}};
 const vvi dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
+int main(){
+    string s;
+    int a,b;
+    cin >> s  >> a >> b;
+    if(s == "dom" or s == "sab")
+        cout << s << " " << a << " " << b << "\n";
 
-int main(){    
     
+
     return 0;
 }
+//g++ -std=c++11 s.cpp -o s.exe & s.exe < ./io/in.txt > ./io/out.txt
 
-//g++ -std=c++11 s.cpp -o ./io/s.exe & io\s.exe < ./io/in.txt > ./io/out.txt
+/*
+int n;
+    cin >> n;
+    vi v(n);
+    for(int& i : v)
+        cin >> i;
+
+    ll a = 0; b = 0, sum = v[0];
+
+    */

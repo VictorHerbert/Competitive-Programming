@@ -44,10 +44,74 @@ const vvi orto = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
 const vvi diag = {{1, 1}, {0, -1}, {1, 0}, {-1, 0}};
 const vvi dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
+vector<char> v;
+string p = "tqer";
 
-int main(){    
-    
-    return 0;
+ll cnt = 0;
+bool isValid(){
+    FOR(i,0,v.size()-1){
+        if((v[i] == 't') and (v[i+1] == 'e'))
+            return false;
+        if((v[i] != 'q') and (v[i+1] == 'r'))
+            return false;
+    }
+    if(v[0] == 'r')
+        return false;
+
+    ll acum = 0;
+    FOR(i,0,v.size())
+        acum += (v[i] == 'e');
+        
+    return acum <= 1;
 }
 
-//g++ -std=c++11 s.cpp -o ./io/s.exe & io\s.exe < ./io/in.txt > ./io/out.txt
+void rec(int pos){
+    for(char c : p){
+        v[pos] = c;
+        if(pos < v.size()-1)
+            rec(pos+1);
+        else{
+            //debug(isValid());
+            cnt += isValid();
+        }
+    }
+}
+
+/*
+i : 3 	| cnt : 22
+i : 4 	| cnt : 59
+i : 5 	| cnt : 157
+i : 6 	| cnt : 414
+i : 7 	| cnt : 1084
+i : 8 	| cnt : 2821
+i : 9 	| cnt : 7303
+i : 10 	| cnt : 18820
+i : 11 	| cnt : 48306
+i : 12 	| cnt : 123551
+i : 13 	| cnt : 315009
+i : 14 	| cnt : 800890
+*/
+
+vi lut = {0,3,8,22,59,157,414,1084,2821,7303,18820,48306,123551,315009,800890,2031032};
+
+
+int main(){
+    /*int i = 15;
+        v = vector<char>(i);
+        cnt = 0;
+        rec(0);
+        debug2(i,cnt);*/
+
+    ll x;
+    cin >> x;
+
+    cout << lut[x] << "\n";
+    
+
+    
+
+
+
+    return 0;
+}
+//g++ -std=c++11 G.cpp -o s.exe & s.exe < ./io/in.txt > ./io/out.txt
