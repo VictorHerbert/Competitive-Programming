@@ -1,3 +1,3 @@
-#python s.py < ./io/in.txt > ./io/out.txt
+#python main.py < ./input/in1.txt > ./output/out1.txt
 def minput(f):
     return [f(s) for s in input().split()]

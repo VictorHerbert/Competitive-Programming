@@ -47,26 +47,7 @@ const vvi diag = {{1, 1}, {0, -1}, {1, 0}, {-1, 0}};
 const vvi dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {0, -1}, {1, 0}, {-1, 0}};
 
 
-template <int N>
-constexpr int force_compute_at_compile_time(){return n}
-
-const int ret(){
-    int k=0;
-
-    FOR(i,0,1e5)
-        k+=i;
-
-    return k;
-}
-
 int main(){
-    clock_t start_time = clock();
 
-    const int a = force_compute_at_compile_time<ret()>();
-
-    
-
-    double elapsed_time = (double)(clock() - start_time) / CLOCKS_PER_SEC;
-    cout << "Elasped time :" << elapsed_time << endl;
     return 0;
 }

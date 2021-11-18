@@ -14,10 +14,10 @@ fail = lambda s : colored(s, color = 'red', attrs=['bold'])
 hint = lambda s : colored(s, color = 'blue', attrs=['bold'])
 hint_white = lambda s : colored(s, color = 'white', attrs=['bold'])
 
-if not f.cmp('s.cpp', 'generated\\~s.cpp'):
-    if os.system('g++ -std=c++11 s.cpp -o generated\\s.exe') == 0:
-        os.system('del generated\\~s.cpp')
-        os.system('copy s.cpp generated\\~s.cpp >nul')
+if not f.cmp('main.cpp', 'generated\\~main.cpp'):
+    if os.system('g++ -std=c++17 main.cpp -o generated\\s.exe') == 0:
+        os.system('del generated\\~main.cpp')
+        os.system('copy main.cpp generated\\~main.cpp >nul')
 
         print(ok('Using compiled version'))
     else:
@@ -32,8 +32,7 @@ if '--c' in sys.argv or '-check' in sys.argv:
     print()
     print(hint_msg('Tests'))
 
-    for in_name in os.listdir('input\\'):
-        
+    for in_name in os.listdir('input\\'):        
         try:
             out_name = in_name.replace('in','out')
 
