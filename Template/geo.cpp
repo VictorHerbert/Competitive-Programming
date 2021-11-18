@@ -2,47 +2,15 @@
 
 using namespace std;
 
-const long double EPS = 1e-6;
-const int INF = INT_MAX / 4;
-const unsigned long long MOD = 1e9 + 7;
-
-
-#define ld long double
-#define ll long long
-#define vi vector<int>
-#define vvi vector<vector<int>>
-#define ull unsigned long long
-#define vll vector<ll>
-#define vvll vector<vector<ll>>
-#define vs vector<string>
-#define vb vector<bool>
-
-inline bool D_EQ(ld a, ld b) { return abs(a - b) < EPS; }
-#define mp make_pair
-#define pb push_back
-#define sz size
-#define all(x) x.begin(), x.end()
-#define rall(x) x.rbegin(), x.rend()
-#define FIND(v, c) find(v.begin(), v.end(), c) != v.end()
-#define FOR(i, a, b) for (int i = a; i < b; i++)
-#define REP(n) FOR(_, 0, n)
-inline int inRange(int i, int a, int b){return a <= i && i < b;}
-inline int inRange2D(int i, int j, int a, int b) { return inRange(i, 0, a) && inRange(j, 0, b); }
-inline int toidx(int i, int j, int n) { return i * n + j; }
-inline ld clamp(ld v, ld a, ld b) { return max(a, min(v, b)); }
-const vvi orto = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-const vvi diag = {{1, 1}, {0, -1}, {1, 0}, {-1, 0}};
-const vvi dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {0, -1}, {1, 0}, {-1, 0}};
-
 //----------------- Constants & Macros ------------------------------
+typedef long double ld;
 
-const ld PI = atan(1.0)*4;
-const ld PI_2 = PI*2;
-const ld DEG_to_RAD_CONST = PI/180;
-const ld RAD_TO_DEG_CONST = 180/PI;
-#define DEG_TO_RAD(x) x * DEG_to_RAD_CONST
-#define RAD_TO_DEG(x) x * RAD_TO_DEG_CONST
-#define hypot(x, y) sqrt(x *x + y * y)
+const ld EPS = 1e-6;
+const ld DEG_to_RAD_CONST = M_PI/180;
+const ld RAD_TO_DEG_CONST = 180/M_PI;
+inline bool D_EQ(ld a, ld b) {return abs(a - b) < EPS;}
+inline ld DEG_TO_RAD(ld x){return x * DEG_to_RAD_CONST;} 
+inline ld RAD_TO_DEG(ld x){return x * RAD_TO_DEG_CONST;}
 
 //----------------- Point ------------------------------
 
@@ -423,46 +391,7 @@ bool intersectsSegSeg(Line s, Line l){
 }
 
 int main(){
-    int n;
-    Point p1,p2;
-    Line l,l1,l2,l3,l4;
-    ld x1,x2,y1,y2;
-    cin >> n;
-
-    REP(n){
-        cin >> p1.x >> p1.y >> p2.x >> p2.y;
-        cin >> x1 >> y1 >> x2 >> y2;
-
-        if (
-            (min(x1, x2) <= min(p1.x, p2.x)) and
-            (max(x1, x2) >= max(p1.x, p2.x)) and
-            (min(y1, y2) <= min(p1.x, p1.x)) and
-            (min(y1, y2) >= min(p1.y, p2.y))
-        )
-            cout << "T\n";
-        else{
-
-            l = Line(p1, p2);
-
-            
-            l1 = Line(Point(x1, y1), Point(x1, y2));
-            l2 = Line(Point(x1, y1), Point(x2, y1));
-            l3 = Line(Point(x2, y2), Point(x1, y2));
-            l4 = Line(Point(x2, y2), Point(x2, y1));
-
-            if(
-                intersectsSegSeg(l, l1) or
-                intersectsSegSeg(l, l2) or
-                intersectsSegSeg(l, l3) or
-                intersectsSegSeg(l, l4)
-            )
-                cout << "T\n";
-            else
-                cout << "F\n";
-        }
-
-    }
-
+    
     return 0;
 }
 
